@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AZEN HUB - Get Key</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121216;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #1c1c24;
+            padding: 30px;
+            border-radius: 14px;
+            border: 1px solid #2d2d3b;
+            text-align: center;
+            width: 340px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+        }
+        h2 { margin-top: 0; font-size: 20px; color: #ffffff; }
+        p { color: #9ba1a6; font-size: 13px; margin-bottom: 25px; }
+        button {
+            background: #5865f2; color: #ffffff; border: none;
+            padding: 12px 20px; border-radius: 8px; font-weight: bold;
+            font-size: 14px; cursor: pointer; width: 100%;
+            transition: background 0.2s;
+        }
+        button:hover { background: #4752c4; }
+        .key-box {
+            background: #141418; border: 1px solid #363646;
+            padding: 14px; border-radius: 8px; margin-top: 20px;
+            font-family: monospace; font-size: 14px; word-break: break-all;
+            color: #00ffcc; letter-spacing: 1px; display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>AZEN HUB KEY SYSTEM</h2>
+        <p>Click the button below to generate your key.</p>
+        <button id="genBtn" onclick="generateKey()">Generate Key</button>
+        <div id="keyDisplay" class="key-box" onclick="copyKey()" style="cursor: pointer;" title="Click to copy"></div>
+    </div>
+
+    <script>
+        function generateKey() {
+            // Membuat string acak dengan awalan AZEN-
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let randPart = '';
+            for (let i = 0; i < 8; i++) {
+                randPart += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            const finalKey = `AZEN-${randPart}`;
+
+            const display = document.getElementById('keyDisplay');
+            display.innerText = finalKey;
+            display.style.display = 'block';
+
+            const btn = document.getElementById('genBtn');
+            btn.innerText = "Copy Key";
+            btn.setAttribute("onclick", "copyKey()");
+        }
+
+        function copyKey() {
+            const text = document.getElementById('keyDisplay').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Key copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
+
