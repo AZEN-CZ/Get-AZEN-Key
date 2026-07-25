@@ -97,8 +97,17 @@
         // Total steps required
         const totalSteps = 2;
 
-        // Check status on page load
+        // Check status on page load & handle return from Linkvertise via URL parameters
         window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const completedStep = urlParams.get('step');
+            
+            if (completedStep) {
+                localStorage.setItem('azen_step', completedStep);
+                // Clean the URL parameters so refreshing doesn't re-trigger
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
             let currentStep = parseInt(localStorage.getItem('azen_step')) || 0;
             let savedKey = localStorage.getItem('azen_key');
 
@@ -107,23 +116,22 @@
 
         // Function when linkvertise button is clicked
         function toLinkvertise(step) {
-            // Replace with your actual Linkvertise URLs
-            const linkvertiseURL = "https://link-target.net/xxxx/step-" + step; 
+            let linkvertiseURL = "";
 
-            // Save temporary progress
+            if (step === 1) {
+                // Linkvertise for Checkpoint 1
+                linkvertiseURL = "https://link-target.net/7791978/fAXEWq46us1V";
+            } else if (step === 2) {
+                // Linkvertise for Checkpoint 2 (Replace with your actual second Linkvertise URL)
+                linkvertiseURL = "https://link-target.net/7791978/YOUR_SECOND_LINK_HERE";
+            }
+
+            // Save temporary target
             localStorage.setItem('azen_current_target', step);
             
-            // Redirect to Linkvertise
-            window.location.href = linkvertiseURL;
-        }
-
-        // Handle return from Linkvertise using URL parameter (e.g., yourwebsite.com/?step=1)
-        const urlParams = new URLSearchParams(window.location.search);
-        const completedStep = urlParams.get('step');
-        
-        if (completedStep) {
-            localStorage.setItem('azen_step', completedStep);
-            window.location.href = window.location.pathname; // Clean URL
+            // Redirect to Linkvertise, appending ?step=X so your web knows which step was finished when redirected back
+            // Note: Ensure your Linkvertise target destination points back to your website URL with ?step=1 or ?step=2 appended.
+            window.location.href = linkvertiseURL + "?r=" + encodeURIComponent(window.location.origin + window.location.pathname + "?step=" + step);
         }
 
         // Update UI based on progress
