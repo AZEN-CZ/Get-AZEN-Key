@@ -94,17 +94,17 @@
     </div>
 
     <script>
-        // Total steps required
         const totalSteps = 2;
 
-        // Check status on page load & handle return from Linkvertise via URL parameters
         window.onload = function() {
+            // Cek apakah ada parameter ?step= di URL saat user kembali dari linkvertise
             const urlParams = new URLSearchParams(window.location.search);
             const completedStep = urlParams.get('step');
             
             if (completedStep) {
+                // Simpan progress terbaru ke localStorage
                 localStorage.setItem('azen_step', completedStep);
-                // Clean the URL parameters so refreshing doesn't re-trigger
+                // Bersihkan URL agar bersih dari parameter ?step=
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
 
@@ -114,26 +114,25 @@
             updateUI(currentStep, savedKey);
         };
 
-        // Function when linkvertise button is clicked
         function toLinkvertise(step) {
-            let linkvertiseURL = "";
+            let targetURL = "";
+            
+            // Dapatkan URL website kamu saat ini secara otomatis
+            let currentWeb = window.location.origin + window.location.pathname;
 
             if (step === 1) {
-                // Linkvertise for Checkpoint 1
-                linkvertiseURL = "https://link-target.net/7791978/fAXEWq46us1V";
+                // Linkvertise 1 dengan target kembalian ke web kamu + ?step=1
+                let destination = encodeURIComponent(currentWeb + "?step=1");
+                targetURL = "https://link-target.net/7791978/fAXEWq46us1V"; // (Atau sesuaikan format target linkvertise kamu)
             } else if (step === 2) {
-                // Linkvertise for Checkpoint 2
-                linkvertiseURL = "https://link-hub.net/7791978/i9mEMzUr7nkG";
+                // Linkvertise 2 dengan target kembalian ke web kamu + ?step=2
+                let destination = encodeURIComponent(currentWeb + "?step=2");
+                targetURL = "https://link-hub.net/7791978/i9mEMzUr7nkG";
             }
 
-            // Save temporary target
-            localStorage.setItem('azen_current_target', step);
-            
-            // Redirect to Linkvertise, appending target return URL
-            window.location.href = linkvertiseURL;
+            window.location.href = targetURL;
         }
 
-        // Update UI based on progress
         function updateUI(step, key) {
             const counterText = document.getElementById('counterText');
             const btnStep1 = document.getElementById('btnStep1');
@@ -144,7 +143,6 @@
             counterText.innerText = `${step}/${totalSteps}`;
 
             if (key) {
-                // If user already generated a key
                 btnStep1.style.display = 'none';
                 btnStep2.style.display = 'none';
                 btnGenerate.style.display = 'none';
@@ -163,19 +161,15 @@
             if (step >= 2) {
                 btnStep2.innerText = "Completed ✓";
                 btnStep2.disabled = true;
-                btnGenerate.disabled = false; // Unlock generate button
+                btnGenerate.disabled = false;
             }
         }
 
-        // Function to generate key with "AZEN-" prefix
         function generateKey() {
             const randomString = Math.random().toString(36).substring(2, 10).toUpperCase();
             const finalKey = "AZEN-" + randomString + "-" + Math.floor(Math.random() * 8999 + 1000);
 
-            // Save key to localStorage to lock it and prevent generating again
             localStorage.setItem('azen_key', finalKey);
-
-            // Refresh UI
             updateUI(2, finalKey);
         }
     </script>
