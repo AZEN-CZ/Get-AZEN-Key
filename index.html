@@ -122,16 +122,15 @@
                 // Linkvertise for Checkpoint 1
                 linkvertiseURL = "https://link-target.net/7791978/fAXEWq46us1V";
             } else if (step === 2) {
-                // Linkvertise for Checkpoint 2 (Replace with your actual second Linkvertise URL)
-                linkvertiseURL = "https://link-target.net/7791978/YOUR_SECOND_LINK_HERE";
+                // Linkvertise for Checkpoint 2
+                linkvertiseURL = "https://link-hub.net/7791978/i9mEMzUr7nkG";
             }
 
             // Save temporary target
             localStorage.setItem('azen_current_target', step);
             
-            // Redirect to Linkvertise, appending ?step=X so your web knows which step was finished when redirected back
-            // Note: Ensure your Linkvertise target destination points back to your website URL with ?step=1 or ?step=2 appended.
-            window.location.href = linkvertiseURL + "?r=" + encodeURIComponent(window.location.origin + window.location.pathname + "?step=" + step);
+            // Redirect to Linkvertise, appending target return URL
+            window.location.href = linkvertiseURL;
         }
 
         // Update UI based on progress
