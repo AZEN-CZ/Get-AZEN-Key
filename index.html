@@ -1,80 +1,188 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZEN HUB - Get Key</title>
+    <title>AZEN Key System</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #121216;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
         }
         .container {
-            background: #1c1c24;
+            background-color: #1e293b;
             padding: 30px;
-            border-radius: 14px;
-            border: 1px solid #2d2d3b;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px;
             text-align: center;
-            width: 340px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
         }
-        h2 { margin-top: 0; font-size: 20px; color: #ffffff; }
-        p { color: #9ba1a6; font-size: 13px; margin-bottom: 25px; }
+        h2 {
+            margin-bottom: 20px;
+            color: #38bdf8;
+            letter-spacing: 1px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #fff;
+            font-size: 14px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
         button {
-            background: #5865f2; color: #ffffff; border: none;
-            padding: 12px 20px; border-radius: 8px; font-weight: bold;
-            font-size: 14px; cursor: pointer; width: 100%;
+            width: 100%;
+            padding: 12px;
+            background-color: #0284c7;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
             transition: background 0.2s;
         }
-        button:hover { background: #4752c4; }
-        .key-box {
-            background: #141418; border: 1px solid #363646;
-            padding: 14px; border-radius: 8px; margin-top: 20px;
-            font-family: monospace; font-size: 14px; word-break: break-all;
-            color: #00ffcc; letter-spacing: 1px; display: none;
+        button:hover {
+            background-color: #0369a1;
+        }
+        .result-box {
+            margin-top: 20px;
+            background-color: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #38bdf8;
+            display: none;
+        }
+        .key-text {
+            font-family: monospace;
+            font-size: 18px;
+            color: #4ade80;
+            margin-top: 5px;
+            word-break: break-all;
+            margin-bottom: 10px;
+        }
+        .btn-copy {
+            background-color: #10b981;
+            font-size: 14px;
+            padding: 8px;
+        }
+        .btn-copy:hover {
+            background-color: #059669;
+        }
+        .discord-box {
+            margin-top: 25px;
+        }
+        .btn-discord {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #5865F2;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: background 0.2s;
+            text-align: center;
+        }
+        .btn-discord:hover {
+            background-color: #4752C4;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h2>AZEN HUB KEY SYSTEM</h2>
-        <p>Click the button below to generate your key.</p>
-        <button id="genBtn" onclick="generateKey()">Generate Key</button>
-        <div id="keyDisplay" class="key-box" onclick="copyKey()" style="cursor: pointer;" title="Click to copy"></div>
+        <h2>AZEN KEY SYSTEM</h2>
+        
+        <div class="input-group">
+            <label for="hwid">Enter Your HWID:</label>
+            <input type="text" id="hwid" name="hwid" placeholder="Example: HWID_XXXXX...">
+        </div>
+        
+        <button onclick="generateKey()">Generate Key</button>
+
+        <div class="result-box" id="resultBox">
+            <label>Your Key Successfully Generated:</label>
+            <div class="key-text" id="keyText">-</div>
+            <button class="btn-copy" onclick="copyKey()">Copy Key</button>
+        </div>
+
+        <div class="discord-box">
+            <a href="https://discord.gg/fcKnCrbhq" target="_blank" class="btn-discord">
+                💬 Join Our Discord Server
+            </a>
+        </div>
     </div>
 
     <script>
         function generateKey() {
-            // Membuat string acak dengan awalan AZEN-
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let randPart = '';
-            for (let i = 0; i < 8; i++) {
-                randPart += chars.charAt(Math.floor(Math.random() * chars.length));
+            const hwidInput = document.getElementById("hwid").value.trim();
+            const resultBox = document.getElementById("resultBox");
+            const keyText = document.getElementById("keyText");
+
+            // VALIDASI HWID: Cek apakah input kosong atau tidak sesuai format
+            // Di sini kita atur minimal panjang HWID harus 6 karakter (bisa kamu ubah)
+            if (hwidInput === "") {
+                alert("Please enter your HWID first!");
+                return;
+            }
+            
+            if (hwidInput.length < 6) {
+                alert("Invalid HWID! Please enter a valid HWID.");
+                resultBox.style.display = "none";
+                return;
             }
 
-            const finalKey = `AZEN-${randPart}`;
+            // Jika format HWID lolos validasi, buat key berawalan AZEN-
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let randomString = '';
+            for (let i = 0; i < 12; i++) {
+                randomString += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
 
-            const display = document.getElementById('keyDisplay');
-            display.innerText = finalKey;
-            display.style.display = 'block';
+            const finalKey = "AZEN-" + randomString;
 
-            const btn = document.getElementById('genBtn');
-            btn.innerText = "Copy Key";
-            btn.setAttribute("onclick", "copyKey()");
+            keyText.innerText = finalKey;
+            resultBox.style.display = "block";
         }
 
         function copyKey() {
-            const text = document.getElementById('keyDisplay').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Key copied to clipboard!");
+            const keyText = document.getElementById("keyText").innerText;
+            navigator.clipboard.writeText(keyText).then(() => {
+                alert("Key copied to clipboard!");
+            });
         }
     </script>
+
 </body>
 </html>
-
